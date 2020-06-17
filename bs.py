@@ -24,8 +24,8 @@ def get_torrents(query):
 		colalign=('center','left','right','right','right')))
 	return t
 
-def get_subtitles(search_term):
-	o = search_subtitles(search_term)
+def get_subtitles(search_term,torrent_name):
+	o = search_subtitles(search_term,torrent_name)
 	print(tabulate(o,headers=["Id", "Name", "D.Count", "Source"],tablefmt='psql',
 		colalign=('center','left','right','left')))
 	return o
@@ -42,12 +42,7 @@ def download_subtitle(url,name,source='opensubtitles'):
 	return subtitle
 
 def main():
-	movie = True
-	query = input('Enter movie or TV show name: ')
-	query = query.lower()
-	if re.search('([s][0-9][0-9][e][0-9][0-9])', query) is not None:
-		movie = False
-	print(movie)
+	query = input('Enter movie or TV show name: ').lower()
 	t = get_torrents(query)
 	torrent = int(input('Select the number of the torrent: '))
 	while True:
@@ -67,7 +62,7 @@ def main():
 	if '[Lime]' in t[torrent][1]:
 		torrent_link = get_lime_magnet(torrent_link)
 
-	o = get_subtitles(query)
+	o = get_subtitles(query,t[torrent][1])
 	sub = int(input('Select subtitles: '))
 	while True:
 		if sub == 0:
@@ -84,4 +79,5 @@ def main():
 	play_torrent(torrent_link, sub=subtitle)
 
 if __name__ == '__main__':
+
 	main()

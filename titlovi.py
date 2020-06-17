@@ -4,29 +4,41 @@ from zipfile import ZipFile
 import urllib.request
 from io import BytesIO
 
-def titlovi_search(query,s=1,e=1,movie=False):
+def titlovi_search(query,s=None,e=None,g=None,movie=False):
+	if g == None:
+		g = ''
+	query = query.replace(' ','+').lower()
+	# print(query)
 	headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'}
-	url = f"https://titlovi.com/titlovi/?prijevod={query}&jezik=bosanski|hrvatski|srpski&t=2&s={s}&e={e}&sort=6"
+	if movie:
+		url = f"https://titlovi.com/titlovi/?prijevod={query}&jezik=bosanski|hrvatski|srpski&t=1&{g}sort=6"
+	else:
+		url = f"https://titlovi.com/titlovi/?prijevod={query}&jezik=bosanski|hrvatski|srpski&t=2&s={s}&e={e}&{g}sort=6"
 	page = requests.get(url, headers=headers)
 	soup = BeautifulSoup(page.content, 'lxml')
 
 	b = []
-	a = soup.find_all('span', class_="s0xe0y")
+	if movie:
+		a = soup.find_all('div', class_="moviePopup")
+	else:
+		a = soup.find_all('span', class_="s0xe0y")
 
 	for x in a:
 		t = x.find_previous_sibling('a').get_text()
 		y = x.find_previous_sibling('i').get_text()
 		z = x.find_parent('h3')
 		g = z.find_next_sibling('h4').get_text().split('fps')[0]
-		title = f"{t} {x.get_text()} {y} {g}"
+		if g.count('/') > 2:
+			groups = g.split('/')
+			g = f"{'/'.join(groups[:3])}/\n   {'/'.join(groups[3:])}"
+		title = f"{t} {x.get_text()} {y} \n   {g}"
 		# print(title)
 		d = z.find_next_sibling('div', class_='download')
 		
 		d_count = d.find('span').get_text()
 		d_link = f"https://titlovi.com/download/?type=1&mediaid={z['data-id']}"
 		b.append([title, d_count, 'titlovi', d_link])
-		# print(d_link)
-		# print(d_count)
+
 	return b
 
 def titlovi_download(url):

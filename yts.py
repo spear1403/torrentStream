@@ -15,5 +15,5 @@ def yts_search(query):
     # print(result['title_long'])
     available_torrents=result['torrents']
     for i in available_torrents:
-        b.append([f"[YTS] {result['title_long']} [{i['quality']}]",i['url'],i['size'],i['seeds'],i['peers']])
+        b.append([f"[YTS] {result['title_long']} [{i['quality']}]",i['size'],i['seeds'],i['peers'],i['url']])
     return b
