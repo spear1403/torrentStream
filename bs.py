@@ -20,13 +20,13 @@ def play_torrent(torrent_link, sub=None):
 def get_torrents(query):
 	t = search_torrents(query)
 	# my_table(title='Torrent search results',content=t)
-	print(tabulate(t,headers=["Id", "Name", "Size", "Seeds", "Peers"],tablefmt='psql',
+	print(tabulate(t,headers=["Id", "Name", "Size", "Seeds", "Peers"],tablefmt='grid',
 		colalign=('center','left','right','right','right')))
 	return t
 
 def get_subtitles(search_term,torrent_name):
 	o = search_subtitles(search_term,torrent_name)
-	print(tabulate(o,headers=["Id", "Name", "D.Count", "Source"],tablefmt='psql',
+	print(tabulate(o,headers=["Id", "Name", "D.Count", "Source"],tablefmt='grid',
 		colalign=('center','left','right','left')))
 	return o
 

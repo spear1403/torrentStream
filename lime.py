@@ -15,7 +15,7 @@ def lime_search(query):
 		f = x.find_next_sibling('a')
 		title = f.get_text()
 		for q in title:
-			if re.search(u'[\u4e00-\u9fff]', q):
+			if re.search(u'[\u4e00-\u9fff]', q) or re.search(u'([Ð¤Ð°Ð½Ñ])', q):
 				chinese = True
 				break
 		if chinese:
